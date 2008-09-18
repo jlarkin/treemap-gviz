@@ -21,7 +21,7 @@
 <![CDATA[
 
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript" src="http://www.corp.google.com/~yaar/TreeMapGViz/TreeMapGViz.js"></script>
+<script type="text/javascript" src="http://treemap-gviz.googlecode.com/svn/trunk/TreeMapGViz/deploy/TreeMapGViz.js"></script>
 
 <div id="debug_div"></div>
 <div id="content_div" style="padding:0;text-align: center; position:relative; top:0%; left:0%; width:100%; height:100%; background-color:white;">
