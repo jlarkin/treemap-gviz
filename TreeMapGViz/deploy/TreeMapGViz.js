@@ -96,8 +96,8 @@ TreeMapGViz.signalSWFReady = function(id){
  * URL to the SWF file.
  * @type{String}
  */
-//TreeMapGViz.SWF_SRC = 'http://www.corp.google.com/~yaar/TreeMapGViz/TreeMapGViz.swf';
-TreeMapGViz.SWF_SRC = 'TreeMapGViz.swf?r='+Math.random(); 
+TreeMapGViz.SWF_SRC = 'http://treemap-gviz.googlecode.com/svn/trunk/TreeMapGViz/deploy/TreeMapGViz.swf?r='+Math.random();
+//TreeMapGViz.SWF_SRC = 'TreeMapGViz.swf?r='+Math.random(); 
 
 /**
  * Writes HTML to embed the SWF object inside the container 
@@ -106,14 +106,12 @@ TreeMapGViz.prototype.embedSWF = function(){
 	var html = [];
 	var w = this.options.width;
 	var h = this.options.height;
+	var flashVars = 'id='+this.id+'&debug='+TreeMapGViz.DEBUG;
 	if (navigator.appName.indexOf("Microsoft") != -1)
 	{
-		//w = 600;
-		//h = 300;
 		var params = [['movie',TreeMapGViz.SWF_SRC],
 					  ['allowScriptAccess','always'],
-					  ['FlashVars','id='+this.id]
-					  ];
+					  ['FlashVars',flashVars]];
 		html.push('<object id="'+this.id+'" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="'+w+'" height="'+h+'">');
 		for (var i=0; i<params.length; i++){
 			var p = params[i];
@@ -123,7 +121,7 @@ TreeMapGViz.prototype.embedSWF = function(){
 	}
     else
     {
-        html.push('<embed name="'+this.id+'" src="'+TreeMapGViz.SWF_SRC+'" style="width:'+(w)+'; height:'+(h)+';" allowscriptaccess="always" flashVars="id='+this.id+'"/>');
+        html.push('<embed name="'+this.id+'" src="'+TreeMapGViz.SWF_SRC+'" style="width:'+(w)+'; height:'+(h)+';" allowscriptaccess="always" flashVars="'+flashVars+'"/>');
     }
     this.container.innerHTML = html.join('\r\n');
 }
@@ -330,7 +328,7 @@ TreeMapGViz.prototype.loadTestData = function(){
  * Initialization and creation of a TreeMapGViz in the context of a spreadsheet gadget.
  */
 TreeMapGViz.gadgetInit = function(){
-	TreeMapGViz.debugInit();
+	TreeMapGViz.debugInit(true,content_div);
 	google.load("visualization", "1.0");
 	
 	var apiLoadedHandler = function(){
