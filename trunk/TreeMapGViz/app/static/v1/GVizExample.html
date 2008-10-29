@@ -1,0 +1,44 @@
+<html>
+<head>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src="http://treemapgviz.appspot.com/static/v1/TreeMapGViz.js"></script>
+</head>
+<body>
+
+<div id="contentDiv">content div</div>
+
+<script>
+    google.load("visualization", "1", {packages: ['table']});
+    google.setOnLoadCallback(onLoadCallBack);
+
+	function onLoadCallBack(){
+
+		try{
+			//create a data table
+			var t = new google.visualization.DataTable();
+        	t.addColumn('string', 'Path');
+			t.addColumn('number', 'Weight');
+        	t.addRows(3);
+        	t.setCell(0, 0, 'Section 1');
+        	t.setCell(0, 1, 1/3);
+        	t.setCell(1, 0, 'Section 2/Item 1');
+        	t.setCell(1, 1, 1/3);
+        	t.setCell(2, 0, 'Section 2/Item 2');
+        	t.setCell(2, 1, 1/3);
+		
+			//create the treemap visualization
+			var tmg = new TreeMapGViz(contentDiv);
+			var options = [];
+			options.width = 400; 
+			options.height = 400; 
+			options.pathToken = '/';
+			tmg.draw(t, options);
+		
+		}catch(e){
+			alert('error: '+e);
+		}
+	}
+</script>
+
+</body>
+</html>

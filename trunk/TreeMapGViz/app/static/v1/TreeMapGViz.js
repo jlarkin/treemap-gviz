@@ -210,6 +210,8 @@ TreeMapGViz.prototype.loadOptions = function(){
         o.siblingPadding = 4;
         
         this.pathToken = null;
+        if (this.options != null)
+        	this.pathToken = this.options.pathToken;
         
 		if (this.options != null && this.options.getInt != null){
 
@@ -217,7 +219,6 @@ TreeMapGViz.prototype.loadOptions = function(){
 			o.height = this.options.height;
 			
 			this.pathToken = this.options.getString('pathToken');
-			if (this.pathToken.length == 0){ this.pathToken = null; };
 			
             if (this.options.getInt('labels')==2)
                 o.labelsOnTopSize = 0;
@@ -235,6 +236,8 @@ TreeMapGViz.prototype.loadOptions = function(){
 			}
 			
 		}
+
+		if (this.pathToken.length == 0){ this.pathToken = null; };
 		
 		this.swf.setOptions(o);
 		
