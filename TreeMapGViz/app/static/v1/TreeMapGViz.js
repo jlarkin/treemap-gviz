@@ -18,7 +18,7 @@ function TreeMapGViz(container){
 
 	//reference to the container
 	this.container = container;
-	this.id = 'TreeMapGViz_x';//'TreeMapGViz_'+Math.random();
+	this.id = 'TreeMapGViz_'+Math.random();
 	this.swfReady = false;
 	this.swf = null;
 
