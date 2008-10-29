@@ -3,8 +3,8 @@ package treemapgviz{
 
 		private var r:Number,g:Number,b:Number;
 
-		private static var BLACK:Color = new Color(0,0,0);
-		private static var WHITE:Color = new Color(1,1,1);
+		public static var BLACK:Color = new Color(0,0,0);
+		public static var WHITE:Color = new Color(1,1,1);
 
 		private static var RAINBOW_COLORS:Array = [
 			Color.fromInts(245,0,0),
