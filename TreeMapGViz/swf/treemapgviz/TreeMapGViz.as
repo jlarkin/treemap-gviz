@@ -107,19 +107,20 @@ public class TreeMapGViz extends Sprite {
     	//some drawing configurations 
         stage.scaleMode = StageScaleMode.NO_SCALE;
         stage.align = StageAlign.TOP_LEFT;
-	this.blendMode = BlendMode.LAYER;
+		this.blendMode = BlendMode.LAYER;
 
-	//initialize logging
-	Log.init(this);
-	
-	//listen to resize events
-	stage.addEventListener(Event.RESIZE, resizeHandler);
+		//initialize logging
+		if (stage.loaderInfo.parameters['debug'] == 'true')
+			Log.init(this);
+		
+		//listen to resize events
+		stage.addEventListener(Event.RESIZE, resizeHandler);
 
-	try{
-	    //create an empty root node
-	    treeRoot = new TreeItem(0,Number.NaN,null);
-	    //create ExternalInterface methods
-	    createJSInterface();
+		try{
+		    //create an empty root node
+		    treeRoot = new TreeItem(0,Number.NaN,null);
+		    //create ExternalInterface methods
+		    createJSInterface();
     	}catch(e:Error){
             Log.error(e);		
     	}
@@ -134,22 +135,23 @@ public class TreeMapGViz extends Sprite {
             //remove all old sprites
             for (var i:int=0;i<allSprites.length; i++)
 	       	removeChild(allSprites[i]);
-	    allSprites = [];
+		    allSprites = [];
 
             //if tree is dirty, preprate it for rendering
-	    if (this.dirty){
-     		prepare(treeRoot,0,null);
+	    	if (this.dirty){
+	     		prepare(treeRoot,0,null);
       	        this.dirty = false;
       	    }
       	    
       	    //recurse over nodes
+      	    var logOffset:int = stage.loaderInfo.parameters['debug'] == 'true'?100:0;
       	    renderRecurse(focusNode==null?treeRoot:focusNode, //node to begin at
-      	                 100,0,  //x,y
-      	                 stage.stageWidth-101,stage.stageHeight-1, //w,h 
+      	                 0+logOffset,0,  //x,y
+      	                 stage.stageWidth-1-logOffset,stage.stageHeight-1, //w,h 
       	                 true);
-	}catch(e:Error){
-		Log.error(e);
-	}
+		}catch(e:Error){
+			Log.error(e);
+		}
     }
 
     /**
@@ -322,78 +324,81 @@ public class TreeMapGViz extends Sprite {
      *  @param {Boolean} vertical - used in alternating layout mode to signify vertical or horizontal split
      */    
     private function renderRecurse(item:TreeItem, sx:Number, sy:Number, w:Number, h:Number, vertical:Boolean):void{
-	try{
-	        //whether to draw labels on top or not 
-		var doLabelsOnTop:Boolean = 
-			this.labelsOnTopSize > 0 
-			&& 
-			(h > this.labelsOnTopSize) 
-			&& 
-			item.label != null;
-
-                //termination condition - rectangle too small			
-		if (w <= 0 || h <= 0)
-			return;
-
-                //determine fill color and lable color	
-		var color:Color = item.color;
-		if (color == null)
-			color = new Color(0,0,0);
-		var labelColor:Color = this.labelColor;
-		if (labelColor == null){
-			if (labelsInvert)
-				labelColor = color.invert();
-			else
-				labelColor = color.multiply(labelsColorMultiply); 
-		}
-
-                //draw the rectangle	
-		drawRect(item,sx,sy,w,h, color,
-		         (this.increaseBorderWidthByLevel?item.depth:1)*borderWidth); 
-
-                //draw label if required	
-		if (doLabelsOnTop){
-		        //if no children, draw on center, otherwise draw on top
-			if (item.child != null)
-				drawLabel(sx,sy,w,this.labelsOnTopSize,item.label, labelColor, 1);
-			else
-				drawLabel(sx,sy+h/2-this.labelsOnTopSize/2,w,this.labelsOnTopSize,item.label, labelColor, 1);
-	                //subtract label size from update sy and h
-			sy+=this.labelsOnTopSize;
-			h -= this.labelsOnTopSize;
-		}
-                
-                //add parent to child padding		
-		if (this.childPadding > 0){
-			sx+=this.childPadding;
-			w-=this.childPadding*2;
-			if (!doLabelsOnTop){ 
-				sy+=this.childPadding;
-				h-=this.childPadding*2;
-			}else{
-				h-=this.childPadding;
+		try{
+		    //whether to draw labels on top or not 
+			var doLabelsOnTop:Boolean = 
+				this.labelsOnTopSize > 0 
+				&& 
+				(h > this.labelsOnTopSize) 
+				&& 
+				item.label != null;
+	
+	        //termination condition - rectangle too small			
+			if (w <= 0 || h <= 0)
+				return;
+	
+			//determine fill color and lable color	
+			var color:Color = item.color;
+			if (color == null)
+				color = new Color(0,0,0);
+			var labelColor:Color = this.labelColor;
+			if (labelColor == null){
+				if (labelsInvert)
+					labelColor = color.invert();
+				else
+					labelColor = color.multiply(labelsColorMultiply); 
 			}
+	
+            //draw the rectangle	
+            if (item != this.treeRoot)
+				drawRect(item,sx,sy,w,h, color,
+				         (this.increaseBorderWidthByLevel?item.depth:1)*borderWidth); 
+			else
+				drawRect(item,sx-1,sy-1,w+2,h+2, Color.WHITE,0); 
+	
+	        //draw label if required	
+			if (doLabelsOnTop){
+			    //if no children, draw on center, otherwise draw on top
+				if (item.child != null)
+					drawLabel(sx,sy,w,this.labelsOnTopSize,item.label, labelColor, 1);
+				else
+					drawLabel(sx,sy+h/2-this.labelsOnTopSize/2,w,this.labelsOnTopSize,item.label, labelColor, 1);
+		                //subtract label size from update sy and h
+				sy+=this.labelsOnTopSize;
+				h -= this.labelsOnTopSize;
+			}
+	                
+			//add parent to child padding		
+			if (this.childPadding > 0 && item != this.treeRoot){
+				sx+=this.childPadding;
+				w-=this.childPadding*2;
+				if (!doLabelsOnTop){ 
+					sy+=this.childPadding;
+					h-=this.childPadding*2;
+				}else{
+					h-=this.childPadding;
+				}
+			}
+	
+	                //recurse according to layout mode			
+			if (layoutMode == 0){
+				renderChildrenAlternate(item.child, item.childCount, item.weight, 
+							 sx,sy,w,h,
+							 vertical); 
+			}else{
+				renderChildrenBestSplit(item.child, item.childCount, item.weight, 
+							sx,sy,w,h,
+							vertical);
+		       }
+	
+	                //draw the lables		 
+			if (!doLabelsOnTop){
+				drawLabel(sx,sy,w,h, item.label, labelColor,item.level*this.labelsAlphaStart/maxLevels);
+			}
+		}catch(e:StackOverflowError){
+		        //unfortunately, this may happen :(
+		        Log.error(e);
 		}
-
-                //recurse according to layout mode			
-		if (layoutMode == 0){
-			renderChildrenAlternate(item.child, item.childCount, item.weight, 
-						 sx,sy,w,h,
-						 vertical); 
-		}else{
-			renderChildrenBestSplit(item.child, item.childCount, item.weight, 
-						sx,sy,w,h,
-						vertical);
-	       }
-
-                //draw the lables		 
-		if (!doLabelsOnTop){
-			drawLabel(sx,sy,w,h, item.label, labelColor,item.level*this.labelsAlphaStart/maxLevels);
-		}
-	}catch(e:StackOverflowError){
-	        //unfortunately, this may happen :(
-	        Log.error(e);
-	}
     }
 
     /**
@@ -414,33 +419,34 @@ public class TreeMapGViz extends Sprite {
     				    w:Number,h:Number,
     				    vertical:Boolean):void{
         //accumulated percentage    				    
-	var accP:Number = 0;
-	//horizontal padding
-	var wPad:Number = (vertical?this.siblingPadding:0);
-	//vertical padding
-	var hPad:Number = (vertical?0:this.siblingPadding);
-	//width after padding
-	var ww:Number = w-(childCount-1)*wPad;
-	//height after padding
-	var hh:Number = h-(childCount-1)*hPad;
-	
-	//iterate over children and render them
-	var i:Number = 0;
-	while (child != null){
-	       //determine sub-level sx,sy
-	       var _sx:int = sx + (vertical?accP:0)*ww + i*wPad;
-	       var _sy:int = sy + (vertical?0:accP)*hh + i*hPad;
-	       //determine percentage
-	       var p:Number = child.weight / weight;
-	       var _w:int = (vertical?p:1)*ww-wPad;
-	       var _h:int = (vertical?1:p)*hh-hPad;
-	       //recurse
-	       renderRecurse(child,_sx,_sy,_w,_h, !vertical);
-	       child = child.sibling;
-	       //accumulate percentages
-	       accP += p;
-	       i++;
-	}
+		var accP:Number = 0;
+		//horizontal padding
+		var sibPadding:Number = this.siblingPadding;
+		var wPad:Number = (vertical?sibPadding:0);
+		//vertical padding
+		var hPad:Number = (vertical?0:sibPadding);
+		//width after padding
+		var ww:Number = w-(childCount-1)*wPad;
+		//height after padding
+		var hh:Number = h-(childCount-1)*hPad;
+		
+		//iterate over children and render them
+		var i:Number = 0;
+		while (child != null){
+		       //determine sub-level sx,sy
+		       var _sx:int = sx + (vertical?accP:0)*ww + i*wPad;
+		       var _sy:int = sy + (vertical?0:accP)*hh + i*hPad;
+		       //determine percentage
+		       var p:Number = child.weight / weight;
+		       var _w:int = (vertical?p:1)*ww-wPad;
+		       var _h:int = (vertical?1:p)*hh-hPad;
+		       //recurse
+		       renderRecurse(child,_sx,_sy,_w,_h, !vertical);
+		       child = child.sibling;
+		       //accumulate percentages
+		       accP += p;
+		       i++;
+		}
     }
     
     /**
@@ -482,7 +488,7 @@ public class TreeMapGViz extends Sprite {
         //iterate over children until best split is found
 	var firstChild:TreeItem = child;
 
-        //accumulated weight		
+    //accumulated weight		
 	var accW:Number = 0;
 	var i:Number = 0;
 	while (child != null && i<childCount && accW < weight)
@@ -502,16 +508,18 @@ public class TreeMapGViz extends Sprite {
 		child = child.sibling;
 	}
 
-        //split vertically if w>h, otherwise split horizontally	
+    //split vertically if w>h, otherwise split horizontally	
 	vertical = w>h;
 
-        //compute width, height and padding	
+    //compute width, height and padding	
 	var ww:Number = w*(vertical?(bestSplitW/weight):1);
 	var hh:Number = h*(vertical?1:(bestSplitW/weight));
-	var wPad:Number = vertical?this.siblingPadding/2:0;
-	var hPad:Number = vertical?0:this.siblingPadding/2;
+	var sibPadding:Number = this.siblingPadding;
+	
+	var wPad:Number = vertical?sibPadding/2:0;
+	var hPad:Number = vertical?0:sibPadding/2;
 
-        //recurse one side
+    //recurse one side
 	renderChildrenBestSplit(
 		firstChild,bestSplitCount,bestSplitW,
 		x,
@@ -519,8 +527,8 @@ public class TreeMapGViz extends Sprite {
 		w*(vertical?(bestSplitW/weight):1)-wPad,
 		h*(vertical?1:(bestSplitW/weight))-hPad,
 		!vertical);
-	//recurse 2nd side
-	renderChildrenBestSplit(
+		//recurse 2nd side
+		renderChildrenBestSplit(
 		bestSplitChild,childCount-bestSplitCount,weight-bestSplitW,
 		x+w*(vertical?(bestSplitW/weight):0)+wPad,
 		y+h*(vertical?0:(bestSplitW/weight))+hPad,
@@ -544,7 +552,7 @@ public class TreeMapGViz extends Sprite {
     private function drawRect(item:TreeItem, x:Number, y:Number, w:Number, h:Number, c:Color, border:Number):void {
 
         //create a rectangle sprite
-	var rec:TreeRect = new TreeRect(item,x,y,w,h,c,this.extrudeAmount,border,this.borderColor);
+		var rec:TreeRect = new TreeRect(item,x,y,w,h,c,this.extrudeAmount,border,this.borderColor);
 
         //add sprite to top level sprite
         addChild(rec);
@@ -552,7 +560,7 @@ public class TreeMapGViz extends Sprite {
         allSprites.push(rec);
         
         //add an event listenr
-	rec.addEventListener(MouseEvent.CLICK, clickHandler);
+		rec.addEventListener(MouseEvent.CLICK, clickHandler);
     }
 
     /**
@@ -564,7 +572,7 @@ public class TreeMapGViz extends Sprite {
     	Log.trace('click: '+event.stageX+','+event.stageY+':'+event.target);
 
         //create the tool tip text field    	
-	var ttt:TextField = toolTipTextField;
+		var ttt:TextField = toolTipTextField;
     	if (ttt == null){
     		this.toolTipTextField = new TextField();
     		ttt = toolTipTextField;
@@ -639,12 +647,12 @@ public class TreeMapGViz extends Sprite {
 	//recreate textfield
 	if (txt != null)
 		removeChild(txt);
-	txt = new TextField();
+		txt = new TextField();
         txt.selectable = false;
         txt.autoSize = 'left';
         txt.width = 1;
         txt.height = 1;
-	txt.background = false;
+		txt.background = false;
         txt.alpha = alpha;
         txt.text = (label==null)?'{null}':label;
       	txt.setTextFormat(format);
@@ -706,18 +714,14 @@ public class TreeMapGViz extends Sprite {
                     
                     //rendering options
                     ExternalInterface.addCallback("setMaxRecords", extSetMaxRecords);
-//                    ExternalInterface.addCallback("setBorderStyle", extSetBorderStyle);
-//                    ExternalInterface.addCallback("setFillStyle", extSetFillStyle);
-//                    ExternalInterface.addCallback("setLayoutStyle", extSetLayoutStyle);
- //                   ExternalInterface.addCallback("setLabelStyle", extSetLabelStyle);
                     ExternalInterface.addCallback("setOptions", extSetOptions);
 
                     Log.trace("External interface created!");
 
                     //signal JavaScript that all is ready
-	            var id:String = stage.loaderInfo.parameters['id'];
-		    ExternalInterface.call("TreeMapGViz.signalSWFReady",id);
-		    Log.trace("Signaled readiness (id="+id+")");
+	            	var id:String = stage.loaderInfo.parameters['id'];
+				    ExternalInterface.call("TreeMapGViz.signalSWFReady",id);
+					Log.trace("Signaled readiness (id="+id+")");
                     
                 } catch (e:Error) {
                     Log.error(e);
@@ -800,7 +804,7 @@ public class TreeMapGViz extends Sprite {
         this.borderWidth = ifUndefInt(o.borderWidth,1);
         this.borderColor = Color.parse(ifUndefStr(o.borderColor,null));
         this.increaseBorderWidthByLevel = ifUndefBool(o.increaseBorderByLevel,false);
-        this.extrudeAmount = ifUndefInt(o.extrudeAmount,0);
+        this.extrudeAmount = ifUndefNum(o.borderExtrudeAmount,0.0);
         this.childPadding = ifUndefInt(o.childPadding,6);
         this.siblingPadding = ifUndefInt(o.siblingPadding,3);
 

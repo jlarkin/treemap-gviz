@@ -25,9 +25,9 @@ public class TreeRect extends Sprite {
 	      	g.lineStyle(border,c.multiply(1+extrudeAmount).toInt());
 	      	g.moveTo(w-b2,b2);
 	      	g.lineTo(b2,b2);
-		g.lineTo(b2,h-b2);
+			g.lineTo(b2,h-b2);
 	      	g.lineStyle(border,c.multiply(1-extrudeAmount).toInt());
-		g.moveTo(w-b2,b2);
+			g.moveTo(w-b2,b2);
 	      	g.lineTo(w-b2,h-b2);
 	      	g.lineTo(b2,h-b2);
 	      }
