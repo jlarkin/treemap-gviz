@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs title="TreeMapGViz Gadget" 
+	description="TreeMapGViz Google Spreadsheet Gadget " 
+	author="Yaar Schnitman" 
+	author_email="yaarsch@gmail.com" screenshot="/ig/modules/spreadsheet.png" 
+	thumbnail="/ig/modules/spreadsheet-thm.png" 
+	height="400" 
+	width="400">
+<Require feature="flash"/>
+<Require feature="idi"/>
+<Require feature="locked-domain"/>
+</ModulePrefs>
+<UserPref name="_table_query_url" display_name="Data source url" required="true"/>
+<UserPref name="layout" display_name="Layout" datatype="enum" default_value="1">
+<EnumValue value="1" display_value="3D"/>
+<EnumValue value="2" display_value="Flat"/>
+</UserPref>
+<UserPref name="labels" display_name="Labels" datatype="enum" default_value="1">
+<EnumValue value="1" display_value="On Top"/>
+<EnumValue value="2" display_value="Floating"/>
+</UserPref>
+<UserPref name="minColor" display_name="Cold Color" datatype="string" default_value="0000ff"/>
+<UserPref name="maxColor" display_name="Hot Color" datatype="string" default_value="ff0000"/>
+<UserPref name="pathToken" display_name="Path Token" datatype="string" default_value="/" />
+<Content type="html">
+<![CDATA[
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src="http://treemapgviz.appspot.com/static/v1/TreeMapGViz.js"></script>
+
+<div id="debug_div"></div>
+<table cellspacing="6" cellpadding="0" border="0"><tr><td><div id="content_div"><img src="http://www.google.com/ig/images/spinner.gif"/></div></td></tr></table>
+
+<script type="text/javascript">
+TreeMapGViz.gadgetInit(content_div,false);
+</script>
+
+]]>
+</Content>
+</Module>
