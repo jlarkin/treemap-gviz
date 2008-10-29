@@ -1,0 +1,10 @@
+Upload:
+appcfg.py update app/
+
+
+Module XML file:
+http://treemapgviz.appspot.com/static/v1/TreeMapGViz.xml
+
+
+
+
