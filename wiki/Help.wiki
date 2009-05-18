@@ -13,9 +13,9 @@ For the TreeMapGViz to work, the spreadsheet must have the following columns:
 
 === Embedding the TreemMapGViz Gadget ===
 
- 1. Select the columns or cells of the graph you want to use as input for the visualization.
- 2. On the spreadsheet menu bar, choose "Insert" and then choose "Gadget...". Browse for the TreeMapGViz gadget and select it.
- 3. Once the gadget appears, click "Apply" to see the result.
+ # Select the columns or cells of the graph you want to use as input for the visualization.
+ # On the spreadsheet menu bar, choose "Insert" and then choose "Gadget...". Browse for the TreeMapGViz gadget and select it.
+ # Once the gadget appears, click "Apply" to see the result.
 
 === Options ===
 
