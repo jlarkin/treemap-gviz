@@ -1,13 +1,22 @@
-#summary One-sentence summary of this page.
+#summary How to use the TreeMapGViz Gadget in a Google Spreadsheet
 
-= Introduction =
+== Introduction ==
 
-Add your content here.
+This page explains how to used the *TreeMapGViz* in a [http://docs.google.com/ Google Spreadsheet]. 
 
+== Spreadsheet Requirements ==
 
-= Details =
+For the TreeMapGViz to work, the spreadsheet must have the following columns:
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+ * One or more *label* columns. Values must be *text*.
+ * One *weights* or *sizes* column. Values must be *numeric*.
+ * All label column(s) must be *to the left* of the weights column.
+
+== Embedding the TreemMapGViz Gadget == 
+
+ 1 Select the columns or cells of the graph you want to use as input for the visualization.
+ 2 On the spreadsheet menu bar, choose "Insert" and then choose "Gadget...". Browse for the TreeMapGViz gadget and select it.
+
+== Options ==
+
+ * 
