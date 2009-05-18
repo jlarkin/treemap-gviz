@@ -19,13 +19,13 @@ For the TreeMapGViz to work, the spreadsheet must have the following columns:
 
 === Options ===
 
- * Range [required] - the spreadsheet cells used as input for the gadget.
- * Number of header rows - ignores the x first rows as header rows.
- * Layout - determines rectangle rendering:
-   * Flat - areas will be rendered as flat rectangle.
-   * 3D - areas are rendered with a 3D effect. 
- * Labels - determines label rendering:
-   * Floating - labels are resized and rendered over the corresponding rectangles.
-   * On top - labels are shrunk and set above the corresponding rectangles.
- * Cold Color & Hot Color [advanced] - user may provide an extra numeric column that controls rectangle colors. The minimm value will be rendered using the cold color (in standard web hexadecimal format). The maximum value will be rendered using the hot color. Values in between will be rendered as a mix.
- * Path Token - allows label values to be provided using a path notation (like a computer file system). The default separation token is /.
+ * *Range* - the spreadsheet cells used as input for the gadget.
+ * *Number* of header rows - ignores the x first rows as header rows.
+ * *Layout* - determines rectangle rendering:
+   * *Flat* - areas will be rendered as flat rectangle.
+   * *3D* - areas are rendered with a 3D effect. 
+ * *Labels* - determines label rendering:
+   * *Floating* - labels are resized and rendered over the corresponding rectangles.
+   * *On top* - labels are shrunk and set above the corresponding rectangles.
+ * *Cold Color & Hot Color* - user may provide an extra numeric column that controls rectangle colors. The minimm value will be rendered using the cold color (in standard web hexadecimal format). The maximum value will be rendered using the hot color. Values in between will be rendered as a mix.
+ * *Path Token* - allows label values to be provided using a path notation (like a computer file system). The default separation token is /.
